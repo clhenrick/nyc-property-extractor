@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet UTF Grid Test</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+  <style type="text/css">
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="map"></div>
+  
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="leaflet.utfgrid.js"></script>
+  <script>
+
+    var map = L.map('map').setView([40.7, -74], 13);
+
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      id: 'examples.map-i875mjb7'
+    }).addTo(map);
+
+    var test = L.tileLayer('http://127.0.0.1:8080/test/{z}/{x}/{y}.png', {opacity: 0.5});
+
+    // var getData = function() {
+    //   $.getJSON('http://localhost:8080/test_utfgrid/{z}/{x}/{y}.grid.json', function(d){
+    //     console.log('getData data: ', d);
+    //   });
+    // }
+
+ 
+
+    // var utfGrid = new L.utfGrid('http://localhost:8080/test_utfgrid/{z}/{x}/{y}.grid.json', {
+    //   useJsonP: false
+    // });
+
+    utfGrid.on('mouseover', function(e){ info.update(e);}).on('mouseout', function(e){ info.update();})
+
+    var info = L.control();
+    info.options.position = 'bottomright';
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+      this._div.innerHTML = "<h4>Block Lot Info</h4>" +  (props ?
+      "<values><b>" + props.data.Block + "</b><br>Lot <rank>" + props.data.Lot+"</rank></values>"
+      : 'Hover over a tax lot');
+    };
+
+    // getData();
+    map.addLayer(test);
+    map.addLayer(utfGrid).addControl(info);
+
+  </script>
+</body>
+</html>

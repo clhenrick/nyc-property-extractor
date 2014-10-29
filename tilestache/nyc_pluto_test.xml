@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[]>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over" buffer-size="256" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
+
+<Parameters>
+  <Parameter name="bounds">-74.0449,40.5682,-73.8272,40.7421</Parameter>
+  <Parameter name="center">-73.9433,40.6456,12</Parameter>
+  <Parameter name="format">png</Parameter>
+  <Parameter name="interactivity_layer">bkmapplutot3857</Parameter>
+  <Parameter name="interactivity_fields">Borough,Block,Lot,Address,OwnerName,NumFloors,LotArea,BldgArea,YearBuilt</Parameter>
+  <Parameter name="minzoom">12</Parameter>
+  <Parameter name="maxzoom">19</Parameter>
+  <Parameter name="name"><![CDATA[NYC Pluto Test]]></Parameter>
+  <Parameter name="description"><![CDATA[working with mapluto data]]></Parameter>
+  <Parameter name="template"><![CDATA[{{#__location__}}{{/__location__}}{{#__teaser__}}<p> Borough: {{{Borough}}} <br> Block: {{{Block}}} <br> Lot: {{{Lot}}} <br> Address: {{{Address}}} <br> Owner Name: {{{OwnerName}}} <br> Number of Floors: {{{NumFloors}}} <br> Lot Area: {{{LotArea}}} <br> Building Area: {{{BldgArea}}} Year Built: {{{YearBuilt}}} </p>{{/__teaser__}}{{#__full__}}{{/__full__}}]]></Parameter>
+</Parameters>
+
+
+<Style name="bkmapplutot3857" filter-mode="first" >
+  <Rule>
+    <PolygonSymbolizer fill="#4095bf" fill-opacity="0.4" />
+    <LineSymbolizer stroke-width="0.3" stroke="#808080" stroke-opacity="0.4" />
+  </Rule>
+</Style>
+<Layer name="bkmapplutot3857"
+  srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over">
+    <StyleName>bkmapplutot3857</StyleName>
+    <Datasource>
+       <Parameter name="file"><![CDATA[/Users/chrislhenrick/Documents/MapBox/project/nyc_pluto_test/layers/bkmapplutot3857.json]]></Parameter>
+       <Parameter name="type"><![CDATA[ogr]]></Parameter>
+       <Parameter name="layer_by_index"><![CDATA[0]]></Parameter>
+    </Datasource>
+  </Layer>
+
+</Map>
