@@ -21,24 +21,17 @@ html, body, .leaflet-container {
   border: 1px solid hsl(0,0%,50%);
   border-radius: 10px;
   box-shadow: hsla(0, 0%, 0%, 0.4) 3px 3px 10px;
-  background: hsl(25, 100%, 90%);  
+  background: hsl(25, 100%, 95%);  
 }
 
 /* leaflet L.control() styles */
 .box.leaflet {
     position: relative;
     padding: 6px 8px;
-    /*font: 14px/16px Arial, Helvetica, sans-serif;*/
-    /*background: white;*/
-    /*background: rgb(255,255,255);*/
-    /*box-shadow: 3px 3px 10px rgba(0,0,0,0.2);*/
-    /*border-radius: 5px;*/
 }
 
 .box h4 {
   margin: 0;
-/*    margin: 0 0 5px;
-    color: #777;*/
 }
 
 .box.title {
@@ -51,8 +44,8 @@ html, body, .leaflet-container {
 
 #about {
   width: 200px;
-  top: 8%; left: 2%;
-  
+  top: 8%; 
+  left: 2%;  
   line-height: 1.4em;
 }
 
@@ -95,4 +88,21 @@ html, body, .leaflet-container {
   font-size: 3em;
   top: .27em;
   /*border: 1px solid red;*/
+}
+
+.legend {
+    margin: 0 0 10% 0;    
+    line-height: 18px;
+    color: #555;
+    left: 13%;
+    bottom: 8%;
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+    /*border: 1px solid black;*/
 }

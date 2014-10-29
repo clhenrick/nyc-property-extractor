@@ -16,7 +16,8 @@ app.map = ( function (w, d) {
       mixRes : '#f0027f',
       man : '#beaed4',
       park : '#fdc086'           
-    }
+    },
+    legend : null
   };
 
   // setup the leaflet map
@@ -154,7 +155,29 @@ app.map = ( function (w, d) {
 
     elements.info.addTo(elements.map);    
 
-  }  
+  }
+
+  // create zone color legend. Renders dynamically.
+  var initLegend = function() {
+    elements.legend = L.control({position: 'bottomleft'});
+    elements.legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'box leaflet legend'),
+            zones = ['R','C', 'M', 'MR', 'P','N'],
+            labels = ['Residential', 'Commercial', 'Manufacturing', 'Manufacturing / Residential', 'Park', 'Unavailable'];
+
+        // loop through zoning styles and generate a label with a colored square for each interval
+        for (var i = 0; i < zones.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(zones[i]) + '"></i> ' +
+                labels[i] + '<br>'  ;
+        }
+
+        return div;
+    };
+
+    elements.legend.addTo(elements.map);
+    console.log('initLegend called');
+  }    
 
   // used to highlight vector features on mouse over
   var highlightFeature =  function(e) {
@@ -192,7 +215,7 @@ app.map = ( function (w, d) {
 
   // get the color for a lot based on its primary zone
   var getColor = function(d) {
-    return  d == 'R' ? elements.lotColors.res :
+    return d == 'R' ? elements.lotColors.res :
                d == 'C' ? elements.lotColors.com :
                d == 'N' ? elements.lotColors.nul :
                d == 'MR' ? elements.lotColors.mixRes :
@@ -240,7 +263,13 @@ app.map = ( function (w, d) {
         onEachFeature : onEachFeature
       }).addTo(elements.map);
 
-      if (elements.info === null ) { initInfo(); }
+      if (elements.info === null ) { 
+        initInfo(); 
+      }
+
+      if (elements.legend === null) {
+        initLegend();
+      }
 
     })
     .fail(function() {
@@ -248,9 +277,7 @@ app.map = ( function (w, d) {
     })
     .always(function() {
       console.log("complete");
-    });
-    
-
+    });    
   }
 
   // call the functions that set up the leaflet map and draw plugin
