@@ -37,7 +37,11 @@ app.map = ( function (w, d) {
       elements.map = L.map('map', config);
       elements.map.addLayer(config.baselayer);
       elements.map.setView(config.initLatLng, config.zoom);
-      elements.test = L.tileLayer('http://localhost:8888/v2/nyc_pluto_test/{z}/{x}/{y}.png', {opacity: 0.5});
+      elements.map.on('zoomend', function(){
+        console.log(elements.map.getZoom());
+      })
+
+      //elements.test = L.tileLayer('http://localhost:8888/v2/nyc_pluto_test/{z}/{x}/{y}.png', {opacity: 0.5});
       //elements.map.addLayer(elements.test);
 
       // move zoom control to top-right corner of map
@@ -114,24 +118,27 @@ app.map = ( function (w, d) {
     var drawControl = new L.Control.Draw(options);      
 
     elements.map.addLayer(elements.editableLayers);
-    elements.map.addControl(drawControl);
+    elements.map.addControl(drawControl);          
     elements.map.on('draw:drawstart', function(e) {
       // hide the instruction UI element
       app.ui.el.pointer.style.visibility="hidden";
     });
-
+      
     elements.map.on('draw:created', function (e) {
-        var type = e.layerType,
+          if (elements.map.getZoom() >= 15 ) {
+            var type = e.layerType,
             layer = e.layer;
-
-        // grab pluto vector layer from db
-        updateLayer(layer);
-        // clear any existing features
-        elements.editableLayers.clearLayers();
-        //turn off the stroke for the drawing layer as its not needed        
-        elements.editableLayers.addLayer(layer.setStyle({stroke: false}));
-        // zoom the map to the extent of the drawing feature's bounds
-        elements.map.fitBounds(elements.editableLayers.getBounds());
+            // grab pluto vector layer from db
+            updateLayer(layer);
+            // clear any existing features
+            elements.editableLayers.clearLayers();
+            //turn off the stroke for the drawing layer as its not needed        
+            elements.editableLayers.addLayer(layer.setStyle({stroke: false}));
+            // zoom the map to the extent of the drawing feature's bounds
+            elements.map.fitBounds(elements.editableLayers.getBounds());
+          } else {
+            alert("Please zoom in to select an area.");
+          };
     });          
   }
 
@@ -206,7 +213,8 @@ app.map = ( function (w, d) {
       elements.lots.resetStyle(e.target);
       elements.info.update();
   }
-
+  
+  // used to zoom into a tax lot when user clicks on it
   var zoomToFeature = function(e) {
     elements.map.fitBounds(e.target.getBounds());
   }
@@ -247,14 +255,12 @@ app.map = ( function (w, d) {
 
     var latLngs = layer.getLatLngs();    
     var data = JSON.stringify(latLngs);
-    //console.log('latLngs: ', latLngs, ' data: ', data);
     var sql_poly = [];
 
     $.ajax({
       url: 'http://localhost:3000/leafletData/' + data,
       type: 'GET',
-      dataType: 'json'
-      // data: shallowEncoded
+      dataType: 'json'      
     })
     .done( function (data, textStatus, jqXHR) {
 
