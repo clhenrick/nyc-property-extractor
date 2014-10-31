@@ -126,8 +126,12 @@ app.map = ( function (w, d) {
 
         // grab pluto vector layer from db
         updateLayer(layer);
-        elements.editableLayers.clearLayers();        
+        // clear any existing features
+        elements.editableLayers.clearLayers();
+        //turn off the stroke for the drawing layer as its not needed        
         elements.editableLayers.addLayer(layer.setStyle({stroke: false}));
+        // zoom the map to the extent of the drawing feature's bounds
+        elements.map.fitBounds(elements.editableLayers.getBounds());
     });          
   }
 
@@ -148,13 +152,12 @@ app.map = ( function (w, d) {
         this._div.innerHTML = '<h4>Tax Lot Info</h4>' +  (props ?
             '<b>Address: </b>' + props.address + '<br>' + 
             '<b>Owner Name: </b>' + props.ownername + '<br>' + 
-            '<b>Primary Zoning: </b>' + props.zoningprimary + '<br>' + 
+            '<b>Zoning: </b>' + props.zoningprimary + '<br>' + 
             '<b>Year Built: </b>' + props.yearbuilt
             : '<i>Hover over a tax lot<br>to view info </i>' );
     };
 
     elements.info.addTo(elements.map);    
-
   }
 
   // create zone color legend. Renders dynamically.
@@ -163,11 +166,12 @@ app.map = ( function (w, d) {
     elements.legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'box leaflet legend'),
             zones = ['R','C', 'M', 'MR', 'P','N'],
-            labels = ['Residential', 'Commercial', 'Manufacturing', 'Manufacturing / Residential', 'Park', 'Unavailable'];
+            labels = ['Residential', 'Commercial', 'Manufacturing', 'Manufacturing / Residential', 'Park', 'Info unavailable'];
 
+        div.innerHTML = '<h4>Zoning:</h4>';
         // loop through zoning styles and generate a label with a colored square for each interval
         for (var i = 0; i < zones.length; i++) {
-            div.innerHTML +=
+            div.innerHTML +=                
                 '<i style="background:' + getColor(zones[i]) + '"></i> ' +
                 labels[i] + '<br>'  ;
         }
@@ -176,7 +180,6 @@ app.map = ( function (w, d) {
     };
 
     elements.legend.addTo(elements.map);
-    console.log('initLegend called');
   }    
 
   // used to highlight vector features on mouse over
@@ -204,12 +207,16 @@ app.map = ( function (w, d) {
       elements.info.update();
   }
 
+  var zoomToFeature = function(e) {
+    elements.map.fitBounds(e.target.getBounds());
+  }
+
   // used to call above two functions
   var onEachFeature = function(feature, layer) {
       layer.on({
           mouseover: highlightFeature,
           mouseout: resetHighlight,
-          // click: zoomToFeature
+          click: zoomToFeature
       });
   }    
 

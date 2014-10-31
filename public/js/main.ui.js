@@ -11,13 +11,13 @@ app.ui = (function(w,d) {
   var closeAbout = function() {
     el.aboutClose.addEventListener("click", function(e){
       if (this.classList != false) {
-        el.about.style.height = "350px";
+        el.about.style.height = "400px";
         el.about.style.overflow = "visible";
         this.removeAttribute('class');
         this.innerHTML = "x";
         this.style.fontSize = "1em";
       } else {
-        el.about.style.height = "20px";
+        el.about.style.height = "43px";
         el.about.style.overflow = "hidden";
         this.className = "closed";
         this.innerHTML = "&#9660;"
