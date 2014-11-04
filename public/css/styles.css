@@ -21,7 +21,7 @@ html, body, .leaflet-container {
   -webkit-box-sizing: border-box;  
   box-sizing: border-box;   
   
-  border: 1px solid hsl(0,0%,50%);
+  border: 1px solid hsl(0, 0%, 60%);
   border-radius: 10px;
   box-shadow: hsla(0, 0%, 0%, 0.4) 3px 3px 10px;
   background: hsl(25, 100%, 95%);  
@@ -66,6 +66,8 @@ html, body, .leaflet-container {
   height: 400px;
   top: 80px; 
   left: 18px;  
+
+  color: #555;
   line-height: 1.4em;
 }
 
@@ -96,6 +98,7 @@ html, body, .leaflet-container {
   right: 50px;
   top: 80px;
   margin: 0;
+  color: #555;
 }
 
 .info1 p {
