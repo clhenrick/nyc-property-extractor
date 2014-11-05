@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var pg = require('pg');
 
 var routes = require('./routes/index');
-var leafletData = require('./routes/leafletData');
+var taxLots = require('./routes/taxLots');
 
 var app = express();
 
@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/leafletData', leafletData);
+app.use('/taxLots', taxLots);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

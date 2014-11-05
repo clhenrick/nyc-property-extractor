@@ -15,7 +15,7 @@ router.param('coords', function(req, res, next, coords) {
 });
 
 router.get('/:coords', function(req, res) {
-  //console.log('leafletData calling getData: ', req, res);
+  //console.log('taxLots.js calling getData: ', req, res);
   getData(req.coords, res);
 });
 

@@ -125,7 +125,7 @@ app.map = ( function (w, d) {
     });
       
     elements.map.on('draw:created', function (e) {
-          if (elements.map.getZoom() >= 15 ) {
+          if (elements.map.getZoom() >= 17 ) {
             var type = e.layerType,
             layer = e.layer;
             // grab pluto vector layer from db
@@ -258,7 +258,7 @@ app.map = ( function (w, d) {
     var sql_poly = [];
 
     $.ajax({
-      url: 'http://localhost:3000/leafletData/' + data,
+      url: 'http://localhost:3000/taxLots/' + data,
       type: 'GET',
       dataType: 'json'      
     })
