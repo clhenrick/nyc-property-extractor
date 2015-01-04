@@ -293,6 +293,17 @@ app.map = ( function (w, d) {
     });    
   }
 
+  // for testing Soda API
+  var getSoda = function() {
+    var legals = "http://data.cityofnewyork.us/resource/uqqa-hym2.json?",
+          params = '$where=within_box(location, 40.678099,-73.946142,40.712459,-73.887005)',
+          url = legals + params;
+
+    $.getJSON(url, function(data) {
+        console.log('soda: ', data);
+    });
+  }  
+
   // call the functions that set up the leaflet map and draw plugin
   var init = function() {
     console.log('app.map init called');
