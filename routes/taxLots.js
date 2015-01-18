@@ -19,7 +19,7 @@ router.get('/:coords', function(req, res) {
   getData(req.coords, res);
 });
 
-var conString = "pg://localhost/nyc_pluto";
+var conString = "pg://localhost/nyc_pluto2";
 var client = new pg.Client(conString);
 client.connect();
 
@@ -48,7 +48,7 @@ function getData(req, res) {
                   "numfloors, yearbuilt, zonedist1, zonedist2, zonedist3," +
                   "zone_style, " +
                   " ST_AsGeoJSON(wkb_geometry)" + 
-                  " AS geom FROM bk_pluto WHERE ST_Intersects(wkb_geometry," +
+                  " AS geom FROM mapluto_2014v2 WHERE ST_Intersects(wkb_geometry," +
                   " ST_MakePolygon(ST_MakeLine(Array["+ sql_poly.join() +"])));";
   
   console.log('the sql: ', sql);
