@@ -1,5 +1,5 @@
 -- add column name for styling data based on zoning
--- ALTER TABLE mapluto_2014v2 ADD COLUMN zoning_style TEXT;
+ALTER TABLE mapluto_2014v2 ADD COLUMN zoning_style TEXT;
 
 -- set zoning_style to 'R' for residential 
 UPDATE mapluto_2014v2 SET zoning_style = 'R' WHERE allzoning1 ILIKE 'R%';
@@ -20,13 +20,13 @@ UPDATE mapluto_2014v2 SET zoning_style = 'P' WHERE allzoning1 ILIKE 'P%';
 UPDATE mapluto_2014v2 SET zoning_style = 'null' WHERE allzoning1 = '';
 
 -- create a new column for available FAR
--- ALTER TABLE mapluto_2014v2 ADD COLUMN availablefar REAL DEFAULT 0;
+ALTER TABLE mapluto_2014v2 ADD COLUMN availablefar REAL DEFAULT 0;
 
 --- For Calculating FAR difference from total residential to built
--- UPDATE mapluto_2014v2 SET availablefar = residfar - builtfar WHERE allzoning1 ILIKE '%R%'; 
+UPDATE mapluto_2014v2 SET availablefar = residfar - builtfar WHERE allzoning1 ILIKE '%R%'; 
 
 -- set negative and null values to 0
--- UPDATE mapluto_2014v2 SET availablefar = 0 WHERE availablefar < 0 OR availablefar IS NULL;
+UPDATE mapluto_2014v2 SET availablefar = 0 WHERE availablefar < 0 OR availablefar IS NULL;
 
 -- add column for long version of borough names 
 ALTER TABLE mapluto_2014v2 ADD COLUMN boro_name_long TEXT;
@@ -41,3 +41,7 @@ UPDATE mapluto_2014v2 set boro_name_long = 'Queens' where borough = 'QN';
 UPDATE mapluto_2014v2 set boro_name_long = 'Staten Island' where borough = 'SI';
 
 UPDATE mapluto_2014v2 set boro_name_long = 'Bronx' where borough = 'BX'
+
+-- clean up after updating
+vacuum analyze mapluto_2014v2;
+cluster mapluto_2014v2 using mapluto_2014v2_gix;
