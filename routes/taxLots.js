@@ -15,7 +15,6 @@ router.param('coords', function(req, res, next, coords) {
 });
 
 router.get('/:coords', function(req, res) {
-  //console.log('taxLots.js calling getData: ', req, res);
   getData(req.coords, res);
 });
 
@@ -26,32 +25,32 @@ client.connect();
 // this one will take coordinates from leaflet and return data from the server
 function getData(req, res) {
 
-  //var coords =req.query.coords;
-  var coords = req;
-
-  var sql_poly = []
-
-  //console.log('postData called. polydata: ', JSON.parse());
+  var coords = req,
+        sql_poly = [],
+        points = [];
 
   for (var i in coords) {
-      sql_poly.push("ST_SetSRID(ST_Point(" + 
-                              coords[i].lng + "," + 
-                              coords[i].lat + "), 4326)");
-    }
+      sql_poly.push(coords[i].lng);
+      sql_poly.push(coords[i].lat);
+    };
 
   // close the polygon
-  sql_poly.push("ST_SetSRID(ST_MakePoint(" + 
-                          coords[0].lng + "," + 
-                          coords[0].lat +   "), 4326)");
+  sql_poly.push(coords[0].lng);
+  sql_poly.push(coords[0].lat);
 
-  var sql =  "SELECT address, zipcode, borough, borocode, block, lot, cd, ownername, ownertype,"+
+  // write the correct number of st_point functions
+  for (var j=1; j<=sql_poly.length; j+=2) {
+    points.push('ST_SetSRID(ST_Point($' + j + ',' + '$' +(j+1) + '), 4326)');
+  }
+
+  var sql =   "SELECT address, zipcode, borough, borocode, block, lot, cd, ownername, ownertype,"+
                   "numfloors, yearbuilt, zonedist1, zonedist2, zonedist3," +
-                  "zone_style, " +
-                  " ST_AsGeoJSON(wkb_geometry)" + 
-                  " AS geom FROM mapluto_2014v2 WHERE ST_Intersects(wkb_geometry," +
-                  " ST_MakePolygon(ST_MakeLine(Array["+ sql_poly.join() +"])));";
-  
-  console.log('the sql: ', sql);
+                  "zoning_style, " +
+                  " ST_AsGeoJSON(geom)" + 
+                  " AS geom FROM mapluto_2014v2 WHERE " +
+                  " ST_Intersects(geom, ST_MakePolygon(ST_MakeLine( ARRAY[" + 
+                  points.join() +
+                  " ] )));";
 
   var fc = {
     "type" : "FeatureCollection",
@@ -59,9 +58,12 @@ function getData(req, res) {
   };
 
 
-  client.query(sql, function(err, result) {
+  client.query(sql, sql_poly, function(err, result) {
     
-    if (err) { console.log("error: ", err); }
+    if (err) { 
+      console.log("error: ", err);
+      return;
+    }
 
     console.log('client query sql res: ', result);
     
@@ -71,21 +73,21 @@ function getData(req, res) {
         "type" : "Feature",
         "geometry" : JSON.parse(feature.geom),
         "properties" : {
-          "borough" : feature.borough,
-          "boroughcode" : feature.borocode,
-          "block": feature.block,
-          "lot": feature.lot,
-          "address": feature.address,
-          "zipcode": feature.zipcode,
-          "communitydistrict": feature.cd,
-          "ownername" : feature.ownername,
-          "ownertype" : feature.ownertype,
-          "numberfloors" : feature.numfloors,
-          "yearbuilt" : feature.yearbuilt,
-          "zoningprimary" : feature.zonedist1,
-          "zoningsecondary" : feature.zonedist2,
-          "zoningtertiary" : feature.zonedist3,
-          "zonestyle" : feature.zone_style
+        "borough" : feature.borough,
+        "boroughcode" : feature.borocode,
+        "block": feature.block,
+        "lot": feature.lot,
+        "address": feature.address,
+        "zipcode": feature.zipcode,
+        "communitydistrict": feature.cd,
+        "ownername" : feature.ownername,
+        "ownertype" : feature.ownertype,
+        "numberfloors" : feature.numfloors,
+        "yearbuilt" : feature.yearbuilt,
+        "zoningprimary" : feature.zonedist1,
+        "zoningsecondary" : feature.zonedist2,
+        "zoningtertiary" : feature.zonedist3,
+        "zonestyle" : feature.zoning_style
         }
       };
       fc.features.push(f);
