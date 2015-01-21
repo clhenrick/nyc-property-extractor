@@ -51,6 +51,8 @@ function getData(req, res) {
                   " ST_Intersects(geom, ST_MakePolygon(ST_MakeLine( ARRAY[" + 
                   points.join() +
                   " ] )));";
+  
+  console.log('the sql: ', sql);
 
   var fc = {
     "type" : "FeatureCollection",
@@ -65,7 +67,7 @@ function getData(req, res) {
       return;
     }
 
-    console.log('client query sql res: ', result);
+    // console.log('client query sql res: ', result);
     
     result.rows.forEach(function(feature) {
 
@@ -96,7 +98,7 @@ function getData(req, res) {
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.send(fc);
       //client.end(); 
-      console.log('queried data: ', fc);
+      // console.log('queried data: ', fc);
   });
 
 };
