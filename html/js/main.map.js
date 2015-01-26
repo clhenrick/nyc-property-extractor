@@ -258,7 +258,7 @@ app.map = ( function (w, d) {
     var sql_poly = [];
 
     $.ajax({
-      url: 'http://localhost:3000/taxLots/' + data,
+      url: 'http://nyc-property-extractor.clhenrick.io/taxLots/' + data,
       type: 'GET',
       dataType: 'json'      
     })
