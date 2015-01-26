@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var pg = require('pg');
 
+//pg.defaults.user = "dude";
+//pg.defaults.password = "PukeNew$80";
+//pg.defaults.host = '/var/run/postgresql';
+
 router.param('coords', function(req, res, next, coords) {
   // do validation on coords here
   // blah blah validation
@@ -18,8 +22,9 @@ router.get('/:coords', function(req, res) {
   getData(req.coords, res);
 });
 
-var conString = "pg://localhost/nyc_pluto2";
+var conString = "pg://dude:1234@localhost:5432/nyc_pluto";
 var client = new pg.Client(conString);
+console.log('connection string: ', conString);
 client.connect();
 
 // this one will take coordinates from leaflet and return data from the server
@@ -47,7 +52,7 @@ function getData(req, res) {
                   "numfloors, yearbuilt, zonedist1, zonedist2, zonedist3," +
                   "zoning_style, " +
                   " ST_AsGeoJSON(geom)" + 
-                  " AS geom FROM mapluto_2014v2 WHERE " +
+                  " AS geom FROM map_pluto2014v2 WHERE " +
                   " ST_Intersects(geom, ST_MakePolygon(ST_MakeLine( ARRAY[" + 
                   points.join() +
                   " ] )));";
