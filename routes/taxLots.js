@@ -3,7 +3,6 @@ var router = express.Router();
 var pg = require('pg');
 
 //pg.defaults.user = "dude";
-//pg.defaults.password = "PukeNew$80";
 //pg.defaults.host = '/var/run/postgresql';
 
 router.param('coords', function(req, res, next, coords) {
